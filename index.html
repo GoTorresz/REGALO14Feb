@@ -117,7 +117,7 @@ p {
   justify-content: center;
 }
 
-/* Botón de música - NUEVO */
+/* Botón de música */
 .music-btn {
   position: fixed;
   top: 20px;
@@ -168,7 +168,7 @@ p {
 <!-- Música -->
 <audio id="musica" src="musica.mp3" loop></audio>
 
-<!-- Botón de música - NUEVO -->
+<!-- Botón de música -->
 <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔇</button>
 
 <div class="card">
@@ -195,7 +195,7 @@ p {
 const historia = [
   { foto: "foto1.jpg", texto: "Me gustaría mirar todo de lejos, pero contigo.❤️" },
   { foto: "foto2.jpg", texto: "Su presencia en mi vida es un regalo que nunca dejaré de apreciar. 💕" },
-  { foto: "foto3.jpeg", texto: "De todas aquellas manos, la suya era la única que me transmitía la vida ✨" },
+  { foto: "foto3.jpg", texto: "De todas aquellas manos, la suya era la única que me transmitía la vida ✨" },
   { foto: "foto4.jpg", texto: "Y para estar total, completa, absolutamente enamorado, hay que tener plena conciencia de que uno también es querido, que uno también inspira amor.❤️" },
   { foto: "foto5.jpg", texto: "Contigo no tengo necesidad de vivir a la defensiva. Me siento feliz.💖" },
   { foto: "foto6.jpg", texto: "💖Fíjese que cuando sonríe se le forman unas comillas en cada extremo de su boca. Esa, su boca, es mi cita favorita.💕" },
@@ -224,7 +224,6 @@ function iniciarHistoria() {
   });
 }
 
-// FUNCIÓN NUEVA - Para controlar la música
 function toggleMusic() {
   const musica = document.getElementById("musica");
   const btn = document.getElementById("musicBtn");
@@ -246,8 +245,27 @@ function mostrar() {
   const img = document.getElementById("fotoActual");
   img.style.opacity = 0;
   img.style.transform = "scale(0.95)";
+  
   setTimeout(() => {
-    img.src = historia[indice].foto;
+    let fotoPath = historia[indice].foto;
+    
+    // Intentar cargar la imagen
+    img.onerror = function() {
+      // Si falla con .jpg, intentar con .jpeg
+      if (fotoPath.endsWith('.jpg')) {
+        img.src = fotoPath.replace('.jpg', '.jpeg');
+      } 
+      // Si falla con .jpeg, intentar con .jpg
+      else if (fotoPath.endsWith('.jpeg')) {
+        img.src = fotoPath.replace('.jpeg', '.jpg');
+      }
+      // Si falla con ambas, intentar con .png
+      else {
+        img.src = fotoPath.replace(/\.(jpg|jpeg)$/, '.png');
+      }
+    };
+    
+    img.src = fotoPath;
     document.getElementById("mensaje").innerText = historia[indice].texto;
     img.style.opacity = 1;
     img.style.transform = "scale(1)";
